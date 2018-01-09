@@ -20,8 +20,8 @@ pipeline {
         }
         stage("Archive artifacts") {
             steps {
-                sh "ls -lR /go/"
-                archive includes: "/go/bin/*"
+                sh "mkdir ${WORKSPACE}/_output && cp -r /go/bin ${WORKSPACE}/_output"
+                archive includes: "_output/bin/*"
             }
         }
     }
