@@ -21,7 +21,7 @@ pipeline {
         stage("Archive artifacts") {
             steps {
                 sh "ls -lR /go/"
-                archive includes: "_output/bin/*"
+                archive includes: "/go/bin/*"
             }
         }
     }
