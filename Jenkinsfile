@@ -23,6 +23,7 @@ pipeline {
         }
         stage("Archive artifacts") {
             steps {
+                sh "ls"
                 archive includes: "_output/bin/*"
             }
         }
