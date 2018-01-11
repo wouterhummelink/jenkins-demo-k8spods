@@ -7,8 +7,11 @@ pipeline {
             image 'golang:1.9.2'
             ttyEnabled true
             command 'cat'
-      }
         }
+      }
+    }
+    options {
+      buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '2'))
     }
     stages {
         stage("Build") {
