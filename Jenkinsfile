@@ -1,12 +1,15 @@
+def dockerlogin = ""
+
 pipeline {
     agent {
         kubernetes {
-            label "mypod"
+            label "golang"
             containerTemplate {
-            name 'golang'
-            image 'golang:1.9.2'
-            ttyEnabled true
-            command 'cat'
+                name 'golang'
+                image 'golang:1.9.2'
+                ttyEnabled true
+                command 'cat'
+            }
         }
       }
     }
@@ -25,7 +28,44 @@ pipeline {
             steps {
                 sh "mkdir ${WORKSPACE}/_output && cp -r /go/bin ${WORKSPACE}/_output"
                 archive includes: "_output/bin/*"
+                stash name: "artifacts", includes: "_output/bin/*"
             }
+        }
+        stage("Aquire aws docker login") {
+          steps {
+            script {
+              dockerlogin = sh "aws ecr login"
+            }
+          }
+        }
+        stage("Create Docker image")
+          agent {
+            kubernetes {
+              containerTemplate {
+                label "docker"
+                containerTemplate {
+                  name "docker"
+                  image "docker:stable"
+                }
+              }
+            }
+          }
+          steps {
+            unstash name: 'artifacts'
+            sh "docker build -t ${AWS_REPO}/demoapp:1.0 ."
+            sh "${dockerlogin}"
+            sh "docker push"
+          }
+          stage("Deploy app to kubernetes") {
+            steps {
+              // sh "kubectl apply -f demoapp-deployment.yaml"
+            }
+          }
+        }
+        stage("Deploy app to kubernetes") {
+          steps {
+            // sh "kubectl apply -f demoapp-deployment.yaml"
+          }
         }
     }
 }
