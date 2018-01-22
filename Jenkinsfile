@@ -26,8 +26,8 @@ pipeline {
         }
         stage("Archive artifacts") {
             steps {
-                archive includes: "demoapp"
-                stash name: "artifacts", includes: "demoapp"
+                archive includes: "demoapp/**"
+                stash name: "artifacts", includes: "demoapp/**"
             }
         }
         stage("Aquire aws docker login") {
