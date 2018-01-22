@@ -42,7 +42,7 @@ pipeline {
                 label "docker"
             }
             environment {
-                AWS_REPO = repourl
+                AWS_REPO = "${repourl}"
             }
             steps {
                 container('docker') {
@@ -62,7 +62,7 @@ pipeline {
             environment {
                 DOCKER_LOGIN = credentials("docker-login")
                 PATH = "${env.PATH}:/usr/local/bin"
-                AWS_REPO = repourl
+                AWS_REPO = "${repourl}"
             }
             steps {
                 echo "Deploy not implemented yet"
