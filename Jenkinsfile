@@ -31,7 +31,7 @@ pipeline {
                 script {
                     dockerlogin = sh "aws ecr login"
                     if(!fileExists('ecr_repo_url')) {
-                        aws s3 cp s3://ord-demo-keystore/ecr_repo_url ecr_repo_url
+                        sh "aws s3 cp s3://ord-demo-keystore/ecr_repo_url ecr_repo_url"
                     }
                     repourl = readFile('ecr_repo_url')
                 }
