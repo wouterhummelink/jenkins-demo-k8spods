@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     sh "aws configure set default.region eu-central-1"
-                    dockerlogin = sh "aws ecr get-login"
+                    dockerlogin = sh script: "aws ecr get-login", returnStdout: true
                     if(!fileExists('ecr_repo_url')) {
                         sh "aws s3 cp s3://ord-demo-keystore/ecr_repo_url ecr_repo_url"
                     }
