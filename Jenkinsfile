@@ -29,7 +29,7 @@ pipeline {
         stage("Aquire aws docker login") {
             steps {
                 script {
-                    dockerlogin = sh "aws ecr login"
+                    dockerlogin = sh "aws ecr get-login"
                     if(!fileExists('ecr_repo_url')) {
                         sh "aws s3 cp s3://ord-demo-keystore/ecr_repo_url ecr_repo_url"
                     }
