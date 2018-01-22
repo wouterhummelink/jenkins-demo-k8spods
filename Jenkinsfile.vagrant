@@ -30,29 +30,31 @@ pipeline {
                 stash name: "artifacts", includes: "demoapp"
             }
         }
-        stage("Aquire aws docker login") {
-          steps {
-            script {
-              dockerlogin = sh "aws ecr login"
-            }
-          }
-        }
         stage("Create Docker image")
           agent {
-            label "docker"
-          }
-          steps {
-            container('docker') {
-              unstash name: 'artifacts'
-              sh "docker build -t ${AWS_REPO}/demoapp:1.0 ."
-              sh "${dockerlogin}"
-              sh "docker push"
+            kubernetes {
+              containerTemplate {
+                label "docker"
+                containerTemplate {
+                  name "docker"
+                  image "docker:stable"
+                }
+              }
             }
           }
-        }
-        stage("Deploy app to kubernetes") {
+          environment {
+            DOCKER_LOGIN = credentials("docker-login")
+          }
           steps {
+            unstash name: 'artifacts'
+            sh "docker build -t docker.io/${env.DOCKER_LOGIN_USR}/demoapp:1.0 ."
+            sh "docker login -u  "${env.DOCKER_LOGIN_USR} -p "${env.DOCKER_LOGIN_PSW}
+            sh "docker push"
+          }
+          stage("Deploy app to kubernetes") {
+            steps {
               // sh "kubectl apply -f demoapp-deployment.yaml"
+            }
           }
         }
     }
