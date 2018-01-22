@@ -49,6 +49,7 @@ pipeline {
                 label "master"
             }
             steps {
+              echo "Deploy not implemented yet"
               // sh "kubectl apply -f demoapp-deployment.yaml"
             }
         }
