@@ -56,6 +56,7 @@ pipeline {
             steps {
                 echo "Deploy not implemented yet"
                 script {
+                    sh "rm demoapp-deployment-1.yaml"
                     def deployment = readYaml file: "demoapp-deployment.yaml"
                     deployment.spec.template.spec.containers[0].image = "docker.io/${env.DOCKER_LOGIN_USR}/demoapp:1.0"
                     writeYaml file: 'demoapp-deployment-1.yaml', data: deployment
