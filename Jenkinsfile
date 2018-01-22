@@ -61,7 +61,6 @@ pipeline {
                 label "master"
             }
             environment {
-                DOCKER_LOGIN = credentials("docker-login")
                 PATH = "${env.PATH}:/usr/local/bin"
                 AWS_REPO = "${repourl}"
             }
