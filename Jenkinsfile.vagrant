@@ -57,9 +57,8 @@ pipeline {
                 echo "Deploy not implemented yet"
                 script {
                     def deployment = readYaml file: "demoapp-deployment.yaml"
-                    echo deployment
                     deployment.spec.template.spec.containers[0].image = "docker.io/${env.DOCKER_LOGIN_USR}/demoapp:1.0"
-                    // writeYaml file: demoapp-deployment-1.yaml, data: deployment
+                    writeYaml file: demoapp-deployment-1.yaml, data: deployment
                 }
                 sh "kubectl apply -f demoapp-deployment-1.yaml"
             }
