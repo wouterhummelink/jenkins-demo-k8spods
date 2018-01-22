@@ -1,31 +1,26 @@
 def dockerlogin = ""
 
 pipeline {
-    agent {
-        kubernetes {
-            label "php"
-            containerTemplate {
-                name 'php'
-                image 'php:7.2.1-apache'
-                ttyEnabled true
-                command 'cat'
-            }
-        }
-    }
     options {
       buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '2'))
     }
     stages {
         stage("Build") {
-            steps {
-              sh "apt-get update && apt-get install -y git zip unzip"
-              sh "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
-              sh "cd demoapp && composer install"
+            agent {
+                kubernetes {
+                    label "php"
+                    containerTemplate {
+                        name 'php'
+                        image 'php:7.2.1-apache'
+                        ttyEnabled true
+                        command 'cat'
+                    }
+                }
             }
-        }
-        stage("Archive artifacts") {
             steps {
-                archive includes: "demoapp/**"
+                sh "apt-get update && apt-get install -y git zip unzip"
+                sh "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
+                sh "cd demoapp && composer install"
                 stash name: "artifacts", includes: "demoapp/**"
             }
         }
@@ -43,6 +38,8 @@ pipeline {
                     sh "docker build -t docker.io/${env.DOCKER_LOGIN_USR}/demoapp:1.0 ."
                     sh "docker login -u  ${env.DOCKER_LOGIN_USR} -p ${env.DOCKER_LOGIN_PSW}"
                     sh "docker push docker.io/${env.DOCKER_LOGIN_USR}/demoapp:1.0"
+                    sh "tar xzf demoapp-1.0.tar.gz demoapp/"
+                    archive include: "demoapp-1.0.tar.gz"
                 }
             }
         }
