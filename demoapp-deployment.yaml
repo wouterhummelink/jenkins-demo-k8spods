@@ -14,7 +14,7 @@ spec:
       # volumes:
       containers:
         - name: demoapp
-          image: "docker.io/whummelink/demoapp:1.0"
+          image: "__REGISTRY_URL__/__REGISTRY_USER__/demoapp:1.0"
           ports:
             - name: http
               containerPort: 80
