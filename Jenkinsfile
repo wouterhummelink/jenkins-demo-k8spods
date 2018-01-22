@@ -37,7 +37,7 @@ pipeline {
                 }
             }  
         }
-        stage("Create Docker image")
+        stage("Create Docker image") {
             agent {
                 label "docker"
             }
