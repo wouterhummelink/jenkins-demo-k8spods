@@ -48,9 +48,9 @@ pipeline {
             steps {
                 container('docker') {
                     unstash name: 'artifacts'
-                    sh "docker build -t ${env.AWS_REPO}/demoapp:1.0 ."
+                    sh "docker build -t ${env.AWS_REPO}:1.0 ."
                     sh "${dockerlogin}"
-                    sh "docker push ${env.AWS_REPO}/demoapp:1.0"
+                    sh "docker push ${env.AWS_REPO}:1.0"
                     sh "tar czf demoapp-1.0.tar.gz demoapp/"
                     archive includes: "demoapp-1.0.tar.gz"
                 }
@@ -72,7 +72,7 @@ pipeline {
                         sh "rm demoapp-deployment-1.yaml"
                     }
                     def deployment = readYaml file: "demoapp-deployment.yaml"
-                    deployment.spec.template.spec.containers[0].image = "docker.io/${env.DOCKER_LOGIN_USR}/demoapp:1.0"
+                    deployment.spec.template.spec.containers[0].image = "${env.AWS_REPO}:1.0"
                     writeYaml file: 'demoapp-deployment-1.yaml', data: deployment
                     sh "kubectl apply -f demoapp-deployment-1.yaml"
                     sh "kubectl apply -f demoapp-svc.yaml"
