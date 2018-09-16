@@ -37,7 +37,7 @@ pipeline {
                 container('docker') {
                     unstash name: 'artifacts'
                     sh "docker build -t docker.io/${env.DOCKER_LOGIN_USR}/demoapp:1.0 ."
-                    sh "docker login -u  ${env.DOCKER_LOGIN_USR} -p ${env.DOCKER_LOGIN_PSW}"
+                    sh "docker login -u  ${env.DOCKER_LOGIN_USR} -p ${env.DOCKER_LOGIN_PSW} docker.io"
                     sh "docker push docker.io/${env.DOCKER_LOGIN_USR}/demoapp:1.0"
                     sh "tar czf demoapp-1.0.tar.gz demoapp/"
                     archive includes: "demoapp-1.0.tar.gz"
