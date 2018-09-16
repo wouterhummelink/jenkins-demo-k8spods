@@ -5,6 +5,7 @@ pipeline {
     agent { label "master" }
     options {
       buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '2'))
+      ansiColor('xterm')
     }
     stages {
         stage("Build") {
