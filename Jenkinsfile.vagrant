@@ -58,6 +58,11 @@ pipeline {
                     if(fileExists("demoapp-deployment-1.yaml")) {
                         sh "rm demoapp-deployment-1.yaml"
                     }
+                    sh 'kubectl config set-cluster kubernetes --server https://kubernetes.default --certificate-authority /var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
+                    sh 'kubectl config set-context kubernetes --cluster kubernetes'
+                    sh 'kubectl config set-user jenkins --token="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token"'
+                    sh 'kubectl config set-context kubernetes --user jenkins'
+                    sh 'kubectl config use-context kubernetes'
                     def deployment = readYaml file: "demoapp-deployment.yaml"
                     deployment.spec.template.spec.containers[0].image = "nexus.lab.wfhdesign.nl/${env.DOCKER_LOGIN_USR}/demoapp:1.0"
                     writeYaml file: 'demoapp-deployment-1.yaml', data: deployment
