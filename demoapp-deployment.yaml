@@ -11,6 +11,8 @@ spec:
       labels:
         app: demoapp
     spec:
+      imagePullSecrets:
+      - name: nexus-auth
       # volumes:
       containers:
         - name: demoapp
