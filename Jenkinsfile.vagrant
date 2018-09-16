@@ -59,8 +59,8 @@ pipeline {
                         sh "rm demoapp-deployment-1.yaml"
                     }
                     sh 'kubectl config set-cluster kubernetes --server https://kubernetes.default --certificate-authority /var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
-                    sh 'kubectl config set-context kubernetes --cluster kubernetes'
-                    sh 'kubectl config set-user jenkins --token="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token"'
+                    sh 'kubectl config set-context kubernetes --cluster kubernetes --namespace=jenkins
+                    sh 'kubectl config set-user jenkins --token="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"'
                     sh 'kubectl config set-context kubernetes --user jenkins'
                     sh 'kubectl config use-context kubernetes'
                     def deployment = readYaml file: "demoapp-deployment.yaml"
