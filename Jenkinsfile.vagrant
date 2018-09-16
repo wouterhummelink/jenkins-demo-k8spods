@@ -37,7 +37,7 @@ pipeline {
                 container('docker') {
                     unstash name: 'artifacts'
                     sh "docker build -t nexus.lab.wfhdesign.nl/${env.DOCKER_LOGIN_USR}/demoapp:1.0 ."
-                    sh "echo '${DOCKER_LOGIN_PSW}' | docker login -u  '${env.DOCKER_LOGIN_USR}' nexus.lab.wfhdesign.nl" --password-stdin
+                    sh "echo '${env.DOCKER_LOGIN_PSW}' | docker login -u  '${env.DOCKER_LOGIN_USR}' nexus.lab.wfhdesign.nl --password-stdin"
                     sh "docker push nexus.lab.wfhdesign.nl/${env.DOCKER_LOGIN_USR}/demoapp:1.0"
                     sh "tar czf demoapp-1.0.tar.gz demoapp/"
                     archive includes: "demoapp-1.0.tar.gz"
